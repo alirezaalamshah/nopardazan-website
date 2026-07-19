@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import Card from '../../components/ui/Card.astro';
+import CTASection from '../../components/ui/CTASection.astro';
+
+const solutions = (await getCollection('solutions')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="راهکارها"
+  description="راهکارهای نرم‌افزاری نوپردازان: باشگاه مشتریان و کارت وفاداری، فروشگاه‌ساز اینترنتی، یکپارچه‌سازی حسابداری سپیدار و مدیریت تگ NFC."
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'راهکارها', url: '/solutions/' },
+  ]}
+>
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <Breadcrumb items={[{ name: 'خانه', href: '/' }, { name: 'راهکارها', href: '/solutions/' }]} />
+    <h1 class="text-3xl font-extrabold">راهکارها</h1>
+    <p class="mt-4 max-w-2xl leading-8 text-[var(--color-text-muted)]">
+      به‌جای فروش یک نرم‌افزار خام، نوپردازان راهکار کامل متناسب با مسئله‌ی کسب‌وکار شما را طراحی می‌کند —
+      از جذب و نگه‌داشت مشتری تا فروش آنلاین و یکپارچگی مالی.
+    </p>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {solutions.map((s) => (
+        <Card href={`/solutions/${s.id}/`} title={s.data.title} summary={s.data.summary} icon={s.data.icon} stat={s.data.customers} />
+      ))}
+    </div>
+  </div>
+
+  <CTASection />
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<BaseLayout title="صفحه پیدا نشد" description="صفحه‌ی مورد نظر یافت نشد.">
+  <div class="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center sm:px-6">
+    <p class="text-6xl font-extrabold text-[var(--color-primary)]">۴۰۴</p>
+    <h1 class="mt-4 text-2xl font-bold">صفحه‌ی مورد نظر پیدا نشد</h1>
+    <p class="mt-3 leading-8 text-[var(--color-text-muted)]">
+      ممکن است آدرس اشتباه باشد یا این صفحه جابه‌جا شده باشد. می‌توانید از راهکارهای ما دیدن کنید یا با ما تماس بگیرید.
+    </p>
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <Button href="/" variant="primary">بازگشت به خانه</Button>
+      <Button href="/solutions/" variant="secondary">مشاهده راهکارها</Button>
+    </div>
+  </div>
+</BaseLayout>

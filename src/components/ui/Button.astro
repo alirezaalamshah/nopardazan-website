@@ -1,0 +1,31 @@
+---
+import { withBase } from '../../lib/url';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  class?: string;
+  type?: 'button' | 'submit';
+}
+
+const { href, variant = 'primary', class: className = '', type = 'button' } = Astro.props;
+const resolvedHref = href ? withBase(href) : undefined;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]';
+
+const variants = {
+  primary:
+    'bg-[var(--color-primary)] text-[var(--color-primary-contrast)] shadow-[var(--shadow-glow-primary)] hover:-translate-y-0.5 hover:opacity-95 motion-reduce:hover:translate-y-0',
+  secondary:
+    'bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] hover:border-[var(--color-primary)]/40 hover:bg-[var(--color-border)]/40',
+  ghost: 'text-[var(--color-primary)] hover:bg-[var(--color-surface)]',
+};
+
+const classes = `${base} ${variants[variant]} ${className}`;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag class={classes} href={resolvedHref} type={href ? undefined : type}>
+  <slot />
+</Tag>

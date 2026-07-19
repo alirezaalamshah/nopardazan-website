@@ -1,0 +1,106 @@
+---
+import { solutionLinks } from '../../lib/nav';
+import Button from '../ui/Button.astro';
+---
+
+<form
+  id="contact-form"
+  class="space-y-5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)] sm:p-8"
+>
+  <!-- Web3Forms access key: کارفرما باید یک کلید رایگان از web3forms.com بگیرد و اینجا جایگزین کند -->
+  <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+  <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <label class="block text-sm">
+      نام و نام‌خانوادگی
+      <input
+        type="text"
+        name="name"
+        required
+        class="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+      />
+    </label>
+    <label class="block text-sm">
+      شماره تماس
+      <input
+        type="tel"
+        name="phone"
+        required
+        class="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+      />
+    </label>
+  </div>
+
+  <label class="block text-sm">
+    ایمیل
+    <input
+      type="email"
+      name="email"
+      required
+      class="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+    />
+  </label>
+
+  <label class="block text-sm">
+    موضوع / راهکار مورد نظر
+    <select
+      name="subject"
+      id="contact-subject"
+      class="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+    >
+      <option value="سوال عمومی">سوال عمومی</option>
+      {solutionLinks.map((s) => <option value={s.title}>{s.title}</option>)}
+      <option value="سایر">سایر</option>
+    </select>
+  </label>
+
+  <label class="block text-sm">
+    پیام شما
+    <textarea
+      name="message"
+      rows="5"
+      required
+      class="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+    ></textarea>
+  </label>
+
+  <Button type="submit" variant="primary" class="w-full sm:w-auto">ارسال پیام</Button>
+  <p id="contact-form-status" role="status" class="text-sm"></p>
+</form>
+
+<script is:inline>
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('contact-form-status');
+  const subjectField = document.getElementById('contact-subject');
+
+  const params = new URLSearchParams(location.search);
+  const presetSubject = params.get('subject');
+  if (presetSubject && subjectField) {
+    const match = [...subjectField.options].find((o) => o.value === presetSubject);
+    if (match) subjectField.value = presetSubject;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!status) return;
+    status.textContent = 'در حال ارسال...';
+    const formData = new FormData(form);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        status.textContent = 'پیام شما با موفقیت ارسال شد. به‌زودی با شما تماس می‌گیریم.';
+        form.reset();
+      } else {
+        status.textContent = 'ارسال ناموفق بود، لطفاً مستقیم با ما تماس بگیرید.';
+      }
+    } catch {
+      status.textContent = 'خطا در ارسال. لطفاً مستقیم با ما تماس بگیرید.';
+    }
+  });
+</script>

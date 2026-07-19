@@ -1,0 +1,31 @@
+---
+interface Props {
+  quote: string;
+  author: string;
+  company: string;
+  companyUrl?: string;
+}
+
+const { quote, author, company, companyUrl } = Astro.props;
+---
+
+<figure class="flex h-full flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)] transition-shadow duration-200 hover:shadow-[var(--shadow-glow-accent)]">
+  <svg class="h-6 w-6 text-[var(--color-accent)]/40" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M9.3 6C6.4 7.4 4.5 9.9 4.5 13c0 2.3 1.6 3.8 3.5 3.8 1.8 0 3.2-1.4 3.2-3.2 0-1.7-1.2-3-2.8-3.2-.2 0-.3-.2-.2-.4.5-1.2 1.6-2.3 3-3l-1.9-1Zm9 0c-2.9 1.4-4.8 3.9-4.8 7 0 2.3 1.6 3.8 3.5 3.8 1.8 0 3.2-1.4 3.2-3.2 0-1.7-1.2-3-2.8-3.2-.2 0-.3-.2-.2-.4.5-1.2 1.6-2.3 3-3l-1.9-1Z" />
+  </svg>
+  <blockquote class="mt-2 flex-1 text-[15px] leading-8 text-[var(--color-text)]">
+    {quote}
+  </blockquote>
+  <figcaption class="mt-4 text-sm text-[var(--color-text-muted)]">
+    {
+      companyUrl ? (
+        <a href={companyUrl} target="_blank" rel="noreferrer noopener" class="font-medium text-[var(--color-primary)]">
+          {company}
+        </a>
+      ) : (
+        <span class="font-medium">{company}</span>
+      )
+    }
+    {author !== company && <span> — {author}</span>}
+  </figcaption>
+</figure>

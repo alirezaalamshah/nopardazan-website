@@ -1,0 +1,101 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import CTASection from '../../components/ui/CTASection.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const portfolio = await getCollection('portfolio');
+  return portfolio.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.seoDescription}
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'نمونه‌کارها', url: '/portfolio/' },
+    { name: entry.data.title, url: `/portfolio/${entry.id}/` },
+  ]}
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <Breadcrumb
+      items={[
+        { name: 'خانه', href: '/' },
+        { name: 'نمونه‌کارها', href: '/portfolio/' },
+        { name: entry.data.title, href: `/portfolio/${entry.id}/` },
+      ]}
+    />
+
+    <div class="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-start">
+      <article class="min-w-0">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] shadow-[var(--shadow-glow-primary)]">
+            <Icon name={entry.data.icon} class="h-6 w-6" />
+          </span>
+          <span class="rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-sm font-medium text-[var(--color-accent)]">
+            {entry.data.customers}
+          </span>
+        </div>
+        <p class="mt-4 text-sm font-medium text-[var(--color-primary)]">محصول آماده — ویژه‌ی {entry.data.audience}</p>
+        <h1 class="mt-1 text-3xl font-extrabold">{entry.data.title}</h1>
+        <p class="mt-4 text-lg leading-8 text-[var(--color-text-muted)]">{entry.data.summary}</p>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+            <p class="text-sm font-bold">مسئله‌ای که حل می‌کند</p>
+            <p class="mt-2 text-sm leading-7 text-[var(--color-text-muted)]">{entry.data.challenge}</p>
+          </div>
+          <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+            <p class="text-sm font-bold">راه‌حل</p>
+            <p class="mt-2 text-sm leading-7 text-[var(--color-text-muted)]">{entry.data.solution}</p>
+          </div>
+        </div>
+
+        <div class="prose-content mt-10 max-w-none leading-8">
+          <Content />
+        </div>
+      </article>
+
+      <aside class="lg:sticky lg:top-24">
+        <div class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)]">
+          <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Icon name={entry.data.icon} class="h-5.5 w-5.5" />
+          </span>
+          <p class="mt-4 text-2xl font-extrabold text-[var(--color-primary)]">{entry.data.customers}</p>
+          <p class="mt-1 text-sm text-[var(--color-text-muted)]">ویژه‌ی {entry.data.audience}</p>
+          <Button href={`/contact/?subject=${encodeURIComponent(entry.data.title)}`} variant="primary" class="mt-6 w-full">
+            درخواست پروژه‌ی مشابه
+          </Button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <CTASection title="پروژه‌ای اختصاصی مشابه نیاز دارید؟" />
+</BaseLayout>
+
+<style>
+  .prose-content :global(h2) {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .prose-content :global(ul) {
+    margin-top: 1rem;
+    list-style: disc;
+    padding-inline-start: 1.5rem;
+  }
+  .prose-content :global(li) {
+    margin-top: 0.4rem;
+  }
+  .prose-content :global(p) {
+    margin-top: 1rem;
+  }
+</style>

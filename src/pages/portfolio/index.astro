@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import Card from '../../components/ui/Card.astro';
+import CTASection from '../../components/ui/CTASection.astro';
+
+const portfolio = (await getCollection('portfolio')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="نمونه‌کارها"
+  description="محصولات اختصاصی نوپردازان که همین حالا توسط ده‌ها و صدها مشتری واقعی استفاده می‌شوند؛ نمونه‌ای از توانایی توسعه‌ی نرم‌افزار سفارشی این شرکت."
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'نمونه‌کارها', url: '/portfolio/' },
+  ]}
+>
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <Breadcrumb items={[{ name: 'خانه', href: '/' }, { name: 'نمونه‌کارها', href: '/portfolio/' }]} />
+    <h1 class="text-3xl font-extrabold">نمونه‌کارها</h1>
+    <p class="mt-4 max-w-2xl leading-8 text-[var(--color-text-muted)]">
+      این‌ها محصولات آماده و در حال استفاده‌ای هستند که از دل نیاز واقعی یک کسب‌وکار توسعه داده شدند و امروز
+      مشتریان واقعی خودشان را دارند — نمونه‌ای از توانایی نوپردازان در توسعه‌ی نرم‌افزار اختصاصی.
+    </p>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2">
+      {portfolio.map((p) => (
+        <Card href={`/portfolio/${p.id}/`} title={p.data.title} summary={p.data.summary} icon={p.data.icon} stat={p.data.customers} />
+      ))}
+    </div>
+  </div>
+
+  <CTASection />
+</BaseLayout>

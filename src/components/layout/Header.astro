@@ -1,0 +1,139 @@
+---
+import { mainNav, siteConfig } from '../../lib/nav';
+import { withBase } from '../../lib/url';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+import Button from '../ui/Button.astro';
+---
+
+<header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/90 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <a href={withBase('/')} class="flex flex-col leading-tight">
+      <span class="text-lg font-bold text-[var(--color-text)]">{siteConfig.name}</span>
+      <span class="text-xs text-[var(--color-text-muted)]">{siteConfig.tagline}</span>
+    </a>
+
+    <nav aria-label="منوی اصلی" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          mainNav.map((item) => (
+            <li class="group relative">
+              <a
+                href={withBase(item.href)}
+                class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-surface)]"
+              >
+                {item.title}
+                {item.children && (
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                  </svg>
+                )}
+              </a>
+              {item.children && (
+                <ul class="invisible absolute end-0 top-full z-10 min-w-56 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={withBase(child.href)}
+                        class="block rounded-lg px-3 py-2 text-sm text-[var(--color-text)] hover:bg-[var(--color-surface)]"
+                      >
+                        {child.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="hidden items-center gap-2 lg:flex">
+      <a
+        href={`tel:${siteConfig.phone.replace(/-/g, '')}`}
+        class="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-primary)]"
+      >
+        {siteConfig.phone}
+      </a>
+      <ThemeToggle />
+      <Button href="/contact/" variant="primary">تماس با ما</Button>
+    </div>
+
+    <div class="flex items-center gap-2 lg:hidden">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="باز کردن منو"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)]"
+      >
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-[var(--color-border)] lg:hidden" data-state="closed">
+    <nav aria-label="منوی موبایل" class="mx-auto max-w-7xl px-4 py-4">
+      <ul class="flex flex-col gap-1">
+        {
+          mainNav.map((item) => (
+            <li>
+              {item.children ? (
+                <details class="group">
+                  <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-text)]">
+                    {item.title}
+                    <svg
+                      class="h-3.5 w-3.5 transition-transform group-open:rotate-180"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <ul class="ms-3 border-s border-[var(--color-border)] ps-3">
+                    {item.children.map((child) => (
+                      <li>
+                        <a href={withBase(child.href)} class="block rounded-lg px-3 py-2 text-sm text-[var(--color-text-muted)]">
+                          {child.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <a href={withBase(item.href)} class="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-text)]">
+                  {item.title}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-4 flex flex-col gap-2 border-t border-[var(--color-border)] pt-4">
+        <a href={`tel:${siteConfig.phone.replace(/-/g, '')}`} class="text-sm text-[var(--color-text-muted)]">
+          {siteConfig.phone}
+        </a>
+        <Button href="/contact/" variant="primary" class="w-full">
+          تماس با ما
+        </Button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  const btn = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const isOpen = menu?.dataset.state === 'open';
+    menu?.classList.toggle('hidden', isOpen);
+    menu?.setAttribute('data-state', isOpen ? 'closed' : 'open');
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+</script>

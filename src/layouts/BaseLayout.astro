@@ -1,0 +1,52 @@
+---
+import Seo from '../components/Seo.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { withBase } from '../lib/url';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  breadcrumb?: { name: string; url: string }[];
+}
+
+const { title, description, image, breadcrumb } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo title={title} description={description} image={image} breadcrumb={breadcrumb} />
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem('theme');
+        const mql = matchMedia('(prefers-color-scheme: dark)');
+        document.documentElement.dataset.theme = stored || (mql.matches ? 'dark' : 'light');
+        // If the user has never explicitly chosen a theme, keep following the
+        // OS setting live (e.g. switching Windows to dark mode updates the
+        // open tab immediately instead of only on next load).
+        if (!stored) {
+          mql.addEventListener('change', (e) => {
+            document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-[100] focus:rounded-lg focus:bg-[var(--color-primary)] focus:px-4 focus:py-2 focus:text-[var(--color-primary-contrast)]">
+      رفتن به محتوای اصلی
+    </a>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

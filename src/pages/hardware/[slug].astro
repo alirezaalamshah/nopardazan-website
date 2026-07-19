@@ -1,0 +1,138 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import CTASection from '../../components/ui/CTASection.astro';
+import Card from '../../components/ui/Card.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const hardware = await getCollection('hardware');
+  return hardware.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const relatedSolutionEntries = await Promise.all(
+  (entry.data.relatedSolutions ?? []).map((slug: string) => getEntry('solutions', slug))
+);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.seoDescription}
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'سخت‌افزار', url: '/hardware/' },
+    { name: entry.data.title, url: `/hardware/${entry.id}/` },
+  ]}
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <Breadcrumb
+      items={[
+        { name: 'خانه', href: '/' },
+        { name: 'سخت‌افزار', href: '/hardware/' },
+        { name: entry.data.title, href: `/hardware/${entry.id}/` },
+      ]}
+    />
+
+    <div class="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-start">
+      <article class="min-w-0">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] shadow-[var(--shadow-glow-primary)]">
+            <Icon name={entry.data.icon} class="h-6 w-6" />
+          </span>
+          <span class="rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-sm font-medium text-[var(--color-accent)]">
+            {entry.data.customers} این دستگاه را خریداری کرده‌اند
+          </span>
+        </div>
+        <h1 class="mt-4 text-3xl font-extrabold">{entry.data.title}</h1>
+        <p class="mt-4 text-lg leading-8 text-[var(--color-text-muted)]">{entry.data.summary}</p>
+
+        {
+          entry.data.specs?.length > 0 && (
+            <table class="mt-8 w-full overflow-hidden rounded-xl border border-[var(--color-border)] text-sm">
+              <tbody>
+                {entry.data.specs.map((s: { label: string; value: string }) => (
+                  <tr class="border-b border-[var(--color-border)] last:border-0">
+                    <th class="w-1/3 bg-[var(--color-surface)] px-4 py-3 text-start font-medium">{s.label}</th>
+                    <td class="px-4 py-3">{s.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )
+        }
+
+        {
+          entry.data.compatibleOS?.length > 0 && (
+            <p class="mt-4 text-sm text-[var(--color-text-muted)]">
+              سیستم‌عامل‌های سازگار: {entry.data.compatibleOS.join('، ')}
+            </p>
+          )
+        }
+
+        <div class="prose-content mt-10 max-w-none leading-8">
+          <Content />
+        </div>
+      </article>
+
+      <aside class="lg:sticky lg:top-24">
+        <div class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)]">
+          <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Icon name={entry.data.icon} class="h-5.5 w-5.5" />
+          </span>
+          <p class="mt-4 text-2xl font-extrabold text-[var(--color-primary)]">{entry.data.customers}</p>
+          <p class="mt-1 text-sm text-[var(--color-text-muted)]">خریدار این دستگاه</p>
+          {
+            entry.data.specs?.length > 0 && (
+              <div class="mt-5 border-t border-[var(--color-border)] pt-5">
+                <p class="text-sm font-bold">مشخصات کلیدی:</p>
+                <ul class="mt-3 space-y-2 text-sm text-[var(--color-text-muted)]">
+                  {entry.data.specs.slice(0, 3).map((s: { label: string; value: string }) => (
+                    <li>• {s.label}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          <Button href={`/contact/?subject=${encodeURIComponent(entry.data.title)}`} variant="primary" class="mt-6 w-full">
+            درخواست مشاوره رایگان
+          </Button>
+        </div>
+      </aside>
+    </div>
+
+    {
+      relatedSolutionEntries.filter(Boolean).length > 0 && (
+        <div class="mt-16">
+          <h2 class="mb-4 text-lg font-bold">راهکارهای مرتبط</h2>
+          <div class="grid gap-4 sm:grid-cols-2">
+            {relatedSolutionEntries.filter(Boolean).map((s) => (
+              <Card href={`/solutions/${s!.id}/`} title={s!.data.title} summary={s!.data.summary} icon={s!.data.icon} stat={s!.data.customers} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <CTASection subject={entry.data.title} />
+</BaseLayout>
+
+<style>
+  .prose-content :global(h2) {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .prose-content :global(p) {
+    margin-top: 1rem;
+  }
+  .prose-content :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+</style>

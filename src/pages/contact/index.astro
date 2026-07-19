@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import ContactForm from '../../components/forms/ContactForm.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { siteConfig } from '../../lib/nav';
+---
+
+<BaseLayout
+  title="تماس با ما"
+  description="راه‌های تماس با نوپردازان زندگی هوشمند: تلفن، واتس‌اپ، ایمیل و فرم درخواست مشاوره رایگان."
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'تماس با ما', url: '/contact/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <Breadcrumb items={[{ name: 'خانه', href: '/' }, { name: 'تماس با ما', href: '/contact/' }]} />
+    <h1 class="text-3xl font-extrabold">تماس با ما</h1>
+    <p class="mt-4 max-w-2xl leading-8 text-[var(--color-text-muted)]">
+      برای مشاوره‌ی رایگان، دریافت قیمت یا هر سوالی درباره‌ی راهکارهای نوپردازان، از یکی از راه‌های زیر با ما در
+      تماس باشید.
+    </p>
+
+    <div class="mt-10 grid gap-8 lg:grid-cols-[1fr_1.4fr]">
+      <div class="space-y-4">
+        <div class="flex items-start gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)]">
+          <span class="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Icon name="phone" class="h-5 w-5" />
+          </span>
+          <div>
+            <p class="text-sm font-bold">تلفن ثابت</p>
+            <a href={`tel:${siteConfig.phone.replace(/-/g, '')}`} class="mt-1 block text-[var(--color-primary)]">{siteConfig.phone}</a>
+            <a href={`tel:${siteConfig.phoneSecondary.replace(/-/g, '')}`} class="mt-1 block text-[var(--color-primary)]">{siteConfig.phoneSecondary}</a>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)]">
+          <span class="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[var(--color-accent)]/10 text-[var(--color-accent)]">
+            <Icon name="whatsapp" class="h-5 w-5" />
+          </span>
+          <div>
+            <p class="text-sm font-bold">موبایل و واتس‌اپ</p>
+            <a href={siteConfig.whatsapp} target="_blank" rel="noreferrer noopener" class="mt-1 block text-[var(--color-primary)]">
+              {siteConfig.mobile}
+            </a>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)]">
+          <span class="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+            <Icon name="mail" class="h-5 w-5" />
+          </span>
+          <div>
+            <p class="text-sm font-bold">ایمیل</p>
+            <a href={`mailto:${siteConfig.email}`} class="mt-1 block text-[var(--color-primary)]">{siteConfig.email}</a>
+          </div>
+        </div>
+      </div>
+
+      <ContactForm />
+    </div>
+  </div>
+</BaseLayout>

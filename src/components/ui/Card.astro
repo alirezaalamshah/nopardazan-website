@@ -1,0 +1,44 @@
+---
+import { withBase } from '../../lib/url';
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  summary: string;
+  icon?: 'heart' | 'shopping-bag' | 'link' | 'nfc' | 'card-reader' | 'dumbbell' | 'cube';
+  stat?: string;
+}
+
+const { href, title, summary, icon, stat } = Astro.props;
+---
+
+<a
+  href={withBase(href)}
+  class="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-1.5 hover:border-[var(--color-primary)]/50 hover:shadow-[var(--shadow-glow-primary)] motion-reduce:hover:translate-y-0"
+>
+  <div class="flex items-start justify-between gap-3">
+    {
+      icon && (
+        <span class="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+          <Icon name={icon} class="h-5.5 w-5.5" />
+        </span>
+      )
+    }
+    {
+      stat && (
+        <span class="rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2.5 py-1 text-xs font-medium whitespace-nowrap text-[var(--color-accent)]">
+          {stat}
+        </span>
+      )
+    }
+  </div>
+  <h3 class="mt-4 text-lg font-bold text-[var(--color-text)]">{title}</h3>
+  <p class="mt-2 flex-1 text-sm leading-7 text-[var(--color-text-muted)]">{summary}</p>
+  <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-primary)]">
+    مشاهده جزئیات
+    <svg class="h-4 w-4 transition-transform group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5 5-5M18 12H6"></path>
+    </svg>
+  </span>
+</a>

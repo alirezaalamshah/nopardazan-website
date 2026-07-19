@@ -1,0 +1,50 @@
+---
+import { siteConfig, solutionLinks, hardwareLinks } from '../../lib/nav';
+import { withBase } from '../../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-[var(--color-border)] bg-[var(--color-surface)]">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
+    <div>
+      <p class="text-lg font-bold">{siteConfig.name}</p>
+      <p class="mt-2 text-sm leading-7 text-[var(--color-text-muted)]">{siteConfig.tagline}</p>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm font-bold">راهکارها</p>
+      <ul class="space-y-2 text-sm text-[var(--color-text-muted)]">
+        {solutionLinks.map((l) => (
+          <li><a href={withBase(l.href)} class="hover:text-[var(--color-primary)]">{l.title}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm font-bold">لینک‌های سریع</p>
+      <ul class="space-y-2 text-sm text-[var(--color-text-muted)]">
+        {hardwareLinks.map((l) => (
+          <li><a href={withBase(l.href)} class="hover:text-[var(--color-primary)]">{l.title}</a></li>
+        ))}
+        <li><a href={withBase('/portfolio/')} class="hover:text-[var(--color-primary)]">نمونه‌کارها</a></li>
+        <li><a href={withBase('/testimonials/')} class="hover:text-[var(--color-primary)]">نظرات مشتریان</a></li>
+        <li><a href={withBase('/about/')} class="hover:text-[var(--color-primary)]">درباره ما</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm font-bold">اطلاعات تماس</p>
+      <ul class="space-y-2 text-sm text-[var(--color-text-muted)]">
+        <li>{siteConfig.phone} / {siteConfig.phoneSecondary}</li>
+        <li>{siteConfig.mobile}</li>
+        <li><a href={`mailto:${siteConfig.email}`} class="hover:text-[var(--color-primary)]">{siteConfig.email}</a></li>
+        <li><a href={withBase('/contact/')} class="font-medium hover:text-[var(--color-primary)]">فرم تماس با ما</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-[var(--color-border)] px-4 py-4 text-center text-xs text-[var(--color-text-muted)] sm:px-6">
+    تمامی حقوق این سایت برای {siteConfig.name} محفوظ است. &copy; {year}
+  </div>
+</footer>

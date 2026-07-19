@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import TestimonialCard from '../../components/ui/TestimonialCard.astro';
+import CTASection from '../../components/ui/CTASection.astro';
+
+const testimonials = (await getCollection('testimonials')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="نظرات مشتریان"
+  description="نظر مشتریان واقعی نوپردازان درباره‌ی باشگاه مشتریان، فروشگاه‌ساز اینترنتی و سایر راهکارهای این شرکت."
+  breadcrumb={[
+    { name: 'خانه', url: '/' },
+    { name: 'نظرات مشتریان', url: '/testimonials/' },
+  ]}
+>
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <Breadcrumb items={[{ name: 'خانه', href: '/' }, { name: 'نظرات مشتریان', href: '/testimonials/' }]} />
+    <h1 class="text-3xl font-extrabold">نظرات مشتریان</h1>
+    <p class="mt-4 max-w-2xl leading-8 text-[var(--color-text-muted)]">
+      این‌ها بخشی از بازخوردهای واقعی کسب‌وکارهایی است که از راهکارهای نوپردازان استفاده می‌کنند.
+    </p>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {testimonials.map((t) => (
+        <TestimonialCard quote={t.data.quote} author={t.data.author} company={t.data.company} companyUrl={t.data.companyUrl} />
+      ))}
+    </div>
+  </div>
+
+  <CTASection />
+</BaseLayout>
