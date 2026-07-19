@@ -11,8 +11,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -20,29 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - name: Install dependencies
-        run: |
-          success=false
-          for i in 1 2 3; do
-            if npm ci; then success=true; break; fi
-            echo "npm ci failed (attempt $i), retrying in 15s..."
-            sleep 15
-          done
-          if [ "$success" != "true" ]; then
-            echo "npm ci failed after 3 attempts"
-            exit 1
-          fi
-      - name: Build
-        run: npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Build site
+        uses: withastro/action@v3
 
   deploy:
     needs: build
@@ -51,6 +30,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
