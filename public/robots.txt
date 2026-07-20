@@ -1,8 +1,4 @@
-# نسخه استیجینگ روی GitHub Pages — عمداً از ایندکس گوگل مستثنی شده.
-# روز انتقال به دامنه اصلی، این فایل باید به حالت زیر تغییر کند:
-# User-agent: *
-# Allow: /
-# Sitemap: https://www.nopardazan.net/sitemap-index.xml
-
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://alirezaalamshah.github.io/nopardazan-website/sitemap-index.xml
