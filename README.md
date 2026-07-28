@@ -8,6 +8,10 @@ Company website redesign for **Nopardazan Smart Living** (نوپردازان ز�
 
 ## English
 
+### Screenshot
+
+![Nopardazan Smart Living — live homepage](.github/readme-assets/screenshot.png)
+
 ### About
 
 A full redesign of the Nopardazan Smart Living corporate site, focused on performance: static output, self-hosted fonts, and content managed through typed Markdown collections (solutions, hardware, portfolio, testimonials).
@@ -48,6 +52,10 @@ Automatically published to GitHub Pages on every push to `main` (see `.github/wo
 ---
 
 ## فارسی
+
+### تصویر
+
+![نوپردازان زندگی هوشمند — صفحه اصلی زنده](.github/readme-assets/screenshot.png)
 
 ### درباره
 
